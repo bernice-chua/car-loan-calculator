@@ -1,4 +1,4 @@
-const CACHE_NAME = "car-loan-calculator-v2";
+const CACHE_NAME = "car-loan-calculator-v3";
 const ASSETS = [
   "./",
   "./index.html",

@@ -145,6 +145,55 @@ const $=id=>document.getElementById(id);
 const price=$("price"),promo=$("promo"),loan=$("loan");
 const loanCustom=$("loanCustomInput"),rateCustom=$("rateCustomInput"),termCustom=$("termCustomInput");
 let loanPct=60,rate=2.6,term=7,loanMode="percentage";
+const STORAGE_KEY="carLoanCalculatorStateV1";
+
+function activePreset(cls){
+  const b=document.querySelector(cls+".active[data-v]");
+  return b ? b.dataset.v : null;
+}
+function saveState(){
+  const state={
+    price: raw(price),
+    priceBlank: price.value.trim()==="",
+    promo: raw(promo),
+    loan: raw(loan),
+    loanPct, rate, term, loanMode,
+    loanPreset: activePreset(".loanBtn"),
+    ratePreset: activePreset(".rateBtn"),
+    termPreset: activePreset(".termBtn")
+  };
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){}
+}
+function restoreSelection(cls,preset,customEl,type,value){
+  clearClass(cls);
+  clearCustom(customEl);
+  if(preset!==null && preset!==undefined){
+    const b=document.querySelector(`${cls}[data-v="${preset}"]`);
+    if(b)b.classList.add("active");
+  }else{
+    customEl.classList.add("active");
+    displayCustom(customEl,type,value);
+  }
+}
+function loadState(){
+  let s=null;
+  try{s=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")}catch(e){}
+  if(!s)return false;
+
+  price.value=s.priceBlank ? "" : Number(s.price||0).toLocaleString("en-SG");
+  promo.value=Number(s.promo||0).toLocaleString("en-SG");
+  loan.value=Number(s.loan||0).toLocaleString("en-SG");
+  loanPct=Number.isFinite(Number(s.loanPct))?Number(s.loanPct):60;
+  rate=Number.isFinite(Number(s.rate))?Number(s.rate):2.6;
+  term=Number.isFinite(Number(s.term))?Number(s.term):7;
+  loanMode=s.loanMode==="amount"?"amount":"percentage";
+
+  restoreSelection(".loanBtn",s.loanPreset,loanCustom,"loan",loanPct);
+  restoreSelection(".rateBtn",s.ratePreset,rateCustom,"rate",rate);
+  restoreSelection(".termBtn",s.termPreset,termCustom,"term",term);
+  calc();
+  return true;
+}
 
 function raw(el){return Math.max(0,Math.floor(Number(String(el.value).replace(/,/g,""))||0))}
 function numFromCustom(el){return Number(String(el.value).replace(/[^0-9.]/g,""))}
@@ -170,6 +219,7 @@ function calc(){
   const total=l+(l*(rate/100)*term);
   $("monthly").textContent=fmt(term>0?Math.ceil(total/(term*12)):0);
   $("down").textContent=fmt(Math.max(0,e-l));
+  saveState();
 }
 
 document.querySelectorAll(".loanBtn[data-v]").forEach(b=>b.onclick=()=>{
@@ -265,6 +315,7 @@ loan.addEventListener("blur",()=>{
 });
 
 $("clearBtn").onclick=()=>{
+  try{localStorage.removeItem(STORAGE_KEY)}catch(e){}
   price.value="";promo.value="0";loan.value="0";
   loanPct=60;rate=2.6;term=7;loanMode="percentage";
   clearClass(".loanBtn");document.querySelector('.loanBtn[data-v="60"]').classList.add("active");clearCustom(loanCustom);
@@ -291,7 +342,7 @@ Bernice Chua | @bernice.mercedes`;
  try{await navigator.clipboard.writeText(text);alert("Result copied.")}catch(e){alert(text)}
 };
 
-fromPct();calc();
+if(!loadState()){fromPct();calc();}
 </script>
 
 <script>
