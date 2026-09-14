@@ -68,6 +68,23 @@ input:focus{border-color:#999}
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Car Loan">
 
+<style id="family-align">
+:root{--fam-page:#f5f5f7;--fam-card:#fff;--fam-text:#171717;--fam-border:#d8d8dc;--fam-selected:#e4e4e7;--fam-result:#f7f7f8}
+html,body{background:var(--fam-page)}
+.app{width:min(100%,760px);margin:0 auto;padding:18px 18px 24px}
+.topbar{min-height:52px;margin-bottom:14px;align-items:center}
+h1{font-size:clamp(25px,4.8vw,34px);line-height:1.08;letter-spacing:-.02em}
+.actions{gap:24px}.action{min-width:58px;min-height:44px;padding:8px 4px;display:inline-flex;align-items:center;justify-content:center}
+.card{border-radius:24px;padding:18px}.field{margin-bottom:14px}label{margin-bottom:8px;line-height:1.15}
+input,.result{min-height:52px;border-radius:16px}.option{min-height:44px;border-radius:14px}
+.option.active{background:var(--fam-selected);color:var(--fam-text)}
+.loan-amount-input{font-weight:800;background:var(--fam-result)}
+.summary-box{min-height:86px;border-radius:18px;padding:13px 14px}
+.summary-box .value{font-size:clamp(27px,6vw,38px);line-height:1.05}
+.credit{margin-top:12px;line-height:1.3}
+@media(min-width:600px){.app{padding:28px 28px 34px}.card{padding:24px}.field{margin-bottom:16px}input,.result{min-height:56px}.option{min-height:48px}.summary-box{min-height:96px;padding:16px}}
+@media(max-width:380px){.app{padding:14px 12px 20px}.card{padding:15px}.actions{gap:16px}.field{margin-bottom:12px}input,.result{min-height:48px}.option{min-height:42px}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -469,5 +486,22 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+<script id="family-inputs">
+(function(){
+ function enhance(el,clearZero){
+  if(!el)return;
+  el.addEventListener("focus",function(){
+   if(clearZero&&this.value.replace(/[$,\s]/g,"")==="0")this.value="";
+   requestAnimationFrame(()=>this.select());
+  });
+  el.addEventListener("click",function(){requestAnimationFrame(()=>this.select())});
+ }
+ window.addEventListener("load",function(){
+  enhance(document.getElementById("price"),false);
+  enhance(document.getElementById("promo"),true);
+  enhance(document.getElementById("loan"),false);
+ });
+})();
+</script>
 </body>
 </html>
