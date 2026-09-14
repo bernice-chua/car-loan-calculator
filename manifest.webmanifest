@@ -1,12 +1,12 @@
 {
   "name": "Car Loan Calculator",
   "short_name": "Car Loan",
-  "description": "Mobile-friendly car loan calculator",
+  "description": "Car loan calculator",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f5f7",
-  "theme_color": "#f5f5f7",
+  "background_color": "#F5F5F7",
+  "theme_color": "#0E284D",
   "icons": [
     {
       "src": "icon-192.png",

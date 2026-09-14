@@ -3,87 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#f5f5f7">
-<title>Car Loan Calculator</title>
-<style>
-:root{--bg:#f5f5f7;--card:#fff;--text:#111;--muted:#737373;--border:#dcdcdf;--soft:#f8f8f9;--selected:#e4e4e7}
-*{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-.app{width:min(560px,100%);margin:0 auto;padding:16px 14px 22px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
-h1{margin:0;font-size:21px;line-height:1.1;font-weight:800}
-.top-actions{display:flex;gap:30px;flex-shrink:0}
-.top-actions button{border:0;background:transparent;padding:10px 4px;font-size:15px;font-weight:800;color:#555;min-height:44px;min-width:56px}
-.share,.clear{background:transparent;color:#555}
-.card{background:var(--card);border-radius:18px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.05)}
-.grid-price{display:grid;grid-template-columns:3fr 2fr;gap:10px}
-.field{margin-bottom:12px}
-label{display:block;font-size:12px;font-weight:800;margin-bottom:4px}
-input{width:100%;height:42px;border:1px solid var(--border);border-radius:10px;background:#fff;color:#111;padding:0 10px;font-size:16px;outline:none}
-input:focus{border-color:#999}
-.money{position:relative}.money span{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}.money input{padding-left:27px}
-.result{height:42px;border:1px solid var(--border);border-radius:10px;background:var(--soft);display:flex;align-items:center;padding:0 10px;font-size:18px;font-weight:800}
-.loan-input{font-size:18px;font-weight:800;background:var(--soft)}
-.options{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-.option{height:44px;border:1px solid var(--border);border-radius:9px;background:#fff;color:#111;font-size:12.5px;font-weight:800;padding:0 3px}
-.option.active{background:var(--selected);border-color:#bfc0c4}.customBox{text-align:center;padding:0 3px}.customBox:focus{background:var(--selected);border-color:#bfc0c4}
-.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:3px}
-.summary-box{border:1px solid var(--border);border-radius:12px;background:var(--soft);padding:11px 11px}
-.summary-box .k{font-size:11.5px;font-weight:800;margin-bottom:3px}
-.summary-box .v{font-size:20px;font-weight:900;line-height:1.1}
-.summary-box:first-child .v{font-size:23px}
-.credit{text-align:center;margin-top:12px;font-size:11px;color:var(--muted)}
-
-@media(max-width:380px){.app{padding:11px 9px 16px}.card{padding:13px}h1{font-size:19px}.option{font-size:11.5px}.field{margin-bottom:10px}}
-
-@media(min-width:700px){
-  .app{width:min(720px,100%);padding:28px 24px 34px}
-  .topbar{margin-bottom:18px}
-  h1{font-size:25px}
-  .top-actions button{font-size:16px}
-  .card{padding:22px;border-radius:22px}
-  .grid-price{gap:14px}
-  .field{margin-bottom:15px}
-  label{font-size:13px;margin-bottom:6px}
-  input,.result{height:48px;font-size:18px}
-  .result,.loan-input{font-size:20px}
-  .options{gap:9px}
-  .option{height:48px;font-size:14px;border-radius:11px}
-  .summary{gap:14px;margin-top:5px}
-  .summary-box{padding:14px}
-  .summary-box .k{font-size:12.5px}
-  .summary-box .v{font-size:23px}
-  .summary-box:first-child .v{font-size:27px}
-  .credit{font-size:12px;margin-top:14px}
-}
-
-</style>
-
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0E284D">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Car Loan">
 
-<style id="family-align">
-:root{--fam-page:#f5f5f7;--fam-card:#fff;--fam-text:#171717;--fam-border:#d8d8dc;--fam-selected:#e4e4e7;--fam-result:#f7f7f8}
-html,body{background:var(--fam-page)}
-.app{width:min(100%,760px);margin:0 auto;padding:18px 18px 24px}
-.topbar{min-height:52px;margin-bottom:14px;align-items:center}
-h1{font-size:clamp(25px,4.8vw,34px);line-height:1.08;letter-spacing:-.02em}
-.actions{gap:24px}.action{min-width:58px;min-height:44px;padding:8px 4px;display:inline-flex;align-items:center;justify-content:center}
-.card{border-radius:24px;padding:18px}.field{margin-bottom:14px}label{margin-bottom:8px;line-height:1.15}
-input,.result{min-height:52px;border-radius:16px}.option{min-height:44px;border-radius:14px}
-.option.active{background:var(--fam-selected);color:var(--fam-text)}
-.loan-amount-input{font-weight:800;background:var(--fam-result)}
-.summary-box{min-height:86px;border-radius:18px;padding:13px 14px}
-.summary-box .value{font-size:clamp(27px,6vw,38px);line-height:1.05}
-.credit{margin-top:12px;line-height:1.3}
-@media(min-width:600px){.app{padding:28px 28px 34px}.card{padding:24px}.field{margin-bottom:16px}input,.result{min-height:56px}.option{min-height:48px}.summary-box{min-height:96px;padding:16px}}
-@media(max-width:380px){.app{padding:14px 12px 20px}.card{padding:15px}.actions{gap:16px}.field{margin-bottom:12px}input,.result{min-height:48px}.option{min-height:42px}}
+<title>Car Loan Calculator</title>
+<style>
+:root{
+  --bg:#F5F5F7;
+  --card:#FFFFFF;
+  --text:#111111;
+  --muted:#737373;
+  --border:#DCDCE0;
+  --soft:#F7F7F8;
+  --selected:#E4E4E7;
+  --family-navy:#0E284D;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+
+.app{width:min(100%,720px);margin:0 auto;padding:18px 18px 24px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;margin-bottom:14px}
+h1{margin:0;font-size:clamp(25px,5vw,32px);line-height:1.08;font-weight:800;letter-spacing:-.02em}
+
+.top-actions{display:flex;gap:28px;flex-shrink:0}
+.top-actions button{
+  border:0;background:transparent;color:#555;
+  padding:8px 4px;min-width:58px;min-height:44px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;
+}
+
+.card{
+  background:var(--card);
+  border-radius:24px;
+  padding:18px;
+  box-shadow:0 4px 18px rgba(0,0,0,.05);
+}
+
+.grid-price{display:grid;grid-template-columns:3fr 2fr;gap:10px}
+.field{margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:800;margin-bottom:7px;line-height:1.15}
+
+input{
+  width:100%;height:52px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#FFF;color:var(--text);
+  padding:0 11px;font-size:16px;outline:none;
+}
+input:focus{border-color:#A8A8AC}
+
+.money{position:relative}
+.money span{
+  position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-size:14px;pointer-events:none;
+}
+.money input{padding-left:28px}
+
+.result{
+  height:52px;border:1px solid var(--border);border-radius:16px;
+  background:var(--soft);display:flex;align-items:center;
+  padding:0 11px;font-size:18px;font-weight:800;
+}
+.loan-input{font-size:18px;font-weight:800;background:var(--soft)}
+
+.options{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.option{
+  height:44px;border:1px solid var(--border);border-radius:14px;
+  background:#FFF;color:var(--text);
+  font-size:12.5px;font-weight:800;padding:0 3px;
+}
+.option.active,.customBox:focus{
+  background:var(--selected);
+  border-color:#BFC0C4;
+  color:var(--text);
+}
+.customBox{text-align:center;padding:0 3px}
+
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:3px}
+.summary-box{
+  min-height:88px;border:1px solid var(--border);border-radius:18px;
+  background:var(--soft);padding:13px 14px;
+}
+.summary-box .k{font-size:11.5px;font-weight:800;margin-bottom:4px}
+.summary-box .v{font-size:28px;font-weight:900;line-height:1.05}
+.summary-box:first-child .v{font-size:28px}
+
+.credit{text-align:center;margin-top:12px;font-size:11px;line-height:1.3;color:var(--muted)}
+
+@media(max-width:380px){
+  .app{padding:14px 12px 20px}
+  .card{padding:15px}
+  .top-actions{gap:18px}
+  .field{margin-bottom:12px}
+  input,.result{height:48px}
+  .option{height:42px;font-size:11.5px}
+  .summary-box .v,.summary-box:first-child .v{font-size:25px}
+}
+
+@media(min-width:700px){
+  .app{width:min(760px,100%);padding:28px 28px 34px}
+  .topbar{margin-bottom:18px}
+  h1{font-size:30px}
+  .top-actions button{font-size:16px}
+  .card{padding:24px}
+  .grid-price{gap:14px}
+  .field{margin-bottom:16px}
+  label{font-size:13px;margin-bottom:7px}
+  input,.result{height:56px;font-size:18px}
+  .result,.loan-input{font-size:20px}
+  .options{gap:9px}
+  .option{height:48px;font-size:14px}
+  .summary{gap:14px;margin-top:5px}
+  .summary-box{min-height:98px;padding:16px}
+  .summary-box .k{font-size:12.5px}
+  .summary-box .v,.summary-box:first-child .v{font-size:32px}
+  .credit{font-size:12px;margin-top:14px}
+}
 </style>
 </head>
 <body>
@@ -110,7 +152,7 @@ input,.result{min-height:52px;border-radius:16px}.option{min-height:44px;border-
 
     <div class="field">
       <label>Effective price</label>
-      <div class="result" id="effective">$200,000</div>
+      <div class="result" id="effective">$0</div>
     </div>
 
     <div class="field">
@@ -125,7 +167,7 @@ input,.result{min-height:52px;border-radius:16px}.option{min-height:44px;border-
 
     <div class="field">
       <label>Loan amount</label>
-      <div class="money"><span>$</span><input class="loan-input" id="loan" type="text" inputmode="numeric" value="120,000"></div>
+      <div class="money"><span>$</span><input class="loan-input" id="loan" type="text" inputmode="numeric" value="0"></div>
     </div>
 
     <div class="field">
@@ -149,8 +191,8 @@ input,.result{min-height:52px;border-radius:16px}.option{min-height:44px;border-
     </div>
 
     <div class="summary">
-      <div class="summary-box"><div class="k">Monthly instalment</div><div class="v" id="monthly">$1,689</div></div>
-      <div class="summary-box"><div class="k">Down payment</div><div class="v" id="down">$80,000</div></div>
+      <div class="summary-box"><div class="k">Monthly instalment</div><div class="v" id="monthly">$0</div></div>
+      <div class="summary-box"><div class="k">Down payment</div><div class="v" id="down">$0</div></div>
     </div>
   </div>
   <div class="credit">Bernice Chua | @bernice.mercedes</div>
@@ -263,6 +305,12 @@ loanCustom.addEventListener("focus",()=>prepCustom(loanCustom,".loanBtn",loanPct
 rateCustom.addEventListener("focus",()=>prepCustom(rateCustom,".rateBtn",rate));
 termCustom.addEventListener("focus",()=>prepCustom(termCustom,".termBtn",Math.round(term)));
 
+[loanCustom,rateCustom,termCustom].forEach(el=>{
+  el.addEventListener("click",()=>{
+    requestAnimationFrame(()=>el.select());
+  });
+});
+
 loanCustom.addEventListener("input",()=>{
   const v=numFromCustom(loanCustom);
   if(Number.isFinite(v)&&v>=0){
@@ -348,7 +396,7 @@ async function buildShareImage(){
   c.width=W;c.height=H;
   const ctx=c.getContext("2d");
 
-  const navy="#0b3f69", text="#0b1f4d", muted="#52606f", line="#c9d9e6", pale="#eef3f7", paleBlue="#dff1fb";
+  const navy="#0E284D", text="#0b1f4d", muted="#52606f", line="#c9d9e6", pale="#eef3f7", paleBlue="#dff1fb";
   const rrect=(x,y,w,h,r,fill)=>{
     ctx.beginPath();
     ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
@@ -481,27 +529,10 @@ if(!loadState()){fromPct();calc();}
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+    navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).catch(() => {});
   });
 }
 </script>
 
-<script id="family-inputs">
-(function(){
- function enhance(el,clearZero){
-  if(!el)return;
-  el.addEventListener("focus",function(){
-   if(clearZero&&this.value.replace(/[$,\s]/g,"")==="0")this.value="";
-   requestAnimationFrame(()=>this.select());
-  });
-  el.addEventListener("click",function(){requestAnimationFrame(()=>this.select())});
- }
- window.addEventListener("load",function(){
-  enhance(document.getElementById("price"),false);
-  enhance(document.getElementById("promo"),true);
-  enhance(document.getElementById("loan"),false);
- });
-})();
-</script>
 </body>
 </html>
