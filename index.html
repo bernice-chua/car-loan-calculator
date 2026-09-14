@@ -405,16 +405,29 @@ async function buildShareImage(){
 $("shareBtn").onclick=async()=>{
   try{
     const blob=await buildShareImage();
-    const file=new File([blob],"car-loan-summary.png",{type:"image/png"});
-    if(navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
-      await navigator.share({files:[file],title:"Car Loan"});
-      return;
-    }
+
+    // First try native file sharing.
+    try{
+      const file=new File([blob],"car-loan-summary.png",{type:"image/png"});
+      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file]});
+        return;
+      }
+    }catch(e){}
+
+    // Fallback for browsers/PWAs that do not support sharing generated File objects.
+    // Download the PNG so the user can share the actual image from Downloads/Gallery.
     const url=URL.createObjectURL(blob);
     const a=document.createElement("a");
-    a.href=url;a.download="car-loan-summary.png";
-    document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    a.href=url;
+    a.download="car-loan-summary.png";
+    a.style.display="none";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+
+    alert("Share image created. Open Downloads to share the PNG.");
   }catch(e){
     alert("Unable to create share image.");
   }
